@@ -42,6 +42,26 @@ extension ByteCountFormatter {
 }
 
 open class ByteCountFormatter : Formatter {
+    
+    private lazy var _countFormatter: NumberFormatter = {
+        
+        var nf = NumberFormatter()
+        nf.minimumIntegerDigits = 1
+        nf.usesGroupingSeparator = true
+        return nf
+        
+    }()
+    
+    private lazy var _byteCountFormatter: NumberFormatter = {
+       
+        var nf = NumberFormatter()
+        nf.minimumIntegerDigits = 1
+        nf.usesGroupingSeparator = true
+        nf.maximumFractionDigits = 0
+        return nf
+        
+    }()
+    
     public override init() {
         super.init()
     }
@@ -50,13 +70,201 @@ open class ByteCountFormatter : Formatter {
         NSUnimplemented()
     }
     
+    
+    private func localizedString(forKey key: String, value: String? = nil) -> String {
+        
+        guard let bundle = Bundle(identifier: "org.swift.Foundation") else {
+            return value ?? key
+        }
+        
+        return bundle.localizedString(forKey: key, value: value, table: "FileSizeFormatting")
+        
+    }
+    
+    private func string(fromByteCount byteCount: Float) -> String {
+        
+        // zero check
+        if (byteCount == 0 && allowsNonnumericFormatting && includesUnit && includesCount){
+            
+            if (allowedUnits.contains(.useBytes)){
+                
+                return localizedString(forKey: "Zero bytes")
+                
+            }else{
+                
+                return localizedString(forKey: "Zero KB")
+                
+            }
+            
+        }
+        
+        
+        // use decimal (1000) or binary (1024)
+        let thousand: Float
+        switch (countStyle){
+                
+        case .binary, .memory:
+            thousand = 1024
+            
+        default:
+            thousand = 1000
+                
+        }
+        
+        
+        // find appropriate unit
+        let absByteCount = abs(byteCount)
+        var unitId = 0
+        var unitMax: Float = 1
+        var isUnitSet = false
+        
+        for i in 0...8 {
+            
+            if (allowedUnits == .useDefault ||
+                (i == 0 && allowedUnits.contains(.useBytes)) ||
+                (i == 1 && allowedUnits.contains(.useKB)) ||
+                (i == 2 && allowedUnits.contains(.useMB)) ||
+                (i == 3 && allowedUnits.contains(.useGB)) ||
+                (i == 4 && allowedUnits.contains(.useTB)) ||
+                (i == 5 && allowedUnits.contains(.usePB)) ||
+                (i == 6 && allowedUnits.contains(.useEB)) ||
+                (i == 7 && allowedUnits.contains(.useZB)) ||
+                (i == 8 && allowedUnits.contains(.useYBOrHigher))){
+                
+                unitId = i
+                isUnitSet = true
+                
+            }
+            
+            if (isUnitSet && absByteCount/unitMax < thousand){
+                break;
+            }
+            
+            unitMax *= thousand
+            
+        }
+        
+        
+        // convert byte count to chosen unit
+        let value = byteCount / pow(thousand, Float(unitId))
+        
+        
+        // set fraction digits (default 2)
+        var fractionDigits = 2
+        
+        if (isAdaptive){
+            if (unitId <= 1){
+                // no fractions for KB or bytes
+                fractionDigits = 0
+            }else if (unitId == 2){
+                // 1 fraction digit for MB
+                fractionDigits = 1
+            }
+        }
+        
+        
+        // generate unit string
+        let unitString: String?
+        if (includesUnit){
+            
+            let unitKeys = ["bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+            let key = unitKeys[unitId]
+            var keyWithContext = key
+                
+            if (zeroPadsFractionDigits == false){
+                    
+                // use singular if rounded value == 1
+                let divisor = pow(10.0, Float(fractionDigits))
+                let roundedValue = round(value * divisor) / divisor
+                    
+                if (roundedValue == 1){
+                    keyWithContext += " Singular"
+                }
+                    
+            }
+            
+            unitString = localizedString(forKey: keyWithContext, value: key)
+            
+        }else{
+            unitString = nil
+        }
+        
+        
+        // generate count string
+        let countString: String?
+        if (includesCount){
+            
+            _countFormatter.maximumFractionDigits = fractionDigits
+            _countFormatter.minimumFractionDigits = zeroPadsFractionDigits ? fractionDigits : 0
+                
+            countString = _countFormatter.string(from: NSNumber(value: value))
+            
+        }else{
+            countString = nil
+        }
+        
+        
+        // combine strings
+        if let unitString = unitString, let countString = countString{
+            
+            if (includesActualByteCount && unitId != 0){
+                // count + unit + byteCount
+                
+                let byteString = _byteCountFormatter.string(from: NSNumber(value: byteCount)) ?? ""
+                
+                var fmt = localizedString(forKey: "%1@ %2@ (%3@ bytes)")
+                
+                fmt = fmt.replacingOccurrences(of: "%1@", with: countString)
+                fmt = fmt.replacingOccurrences(of: "%2@", with: unitString)
+                fmt = fmt.replacingOccurrences(of: "%3@", with: byteString)
+                
+                return fmt
+               
+            }else{
+                // count + unit
+                
+                var fmt = localizedString(forKey: "%1@ %2@")
+                
+                fmt = fmt.replacingOccurrences(of: "%1@", with: countString)
+                fmt = fmt.replacingOccurrences(of: "%2@", with: unitString)
+                
+                return fmt
+                
+            }
+            
+        }else if let unitString = unitString{
+            //just unit
+            return unitString
+        }else if let countString = countString{
+            //just count
+            return countString
+        }
+        
+        return ""
+        
+    }
+
+    
     /* Shortcut for converting a byte count into a string without creating an NSByteCountFormatter and an NSNumber. If you need to specify options other than countStyle, create an instance of NSByteCountFormatter first.
     */
-    open class func string(fromByteCount byteCount: Int64, countStyle: ByteCountFormatter.CountStyle) -> String { NSUnimplemented() }
+    open class func string(fromByteCount byteCount: Int64, countStyle: ByteCountFormatter.CountStyle) -> String {
+    
+        let fm = ByteCountFormatter()
+        fm.countStyle = countStyle
+        return fm.string(fromByteCount: byteCount)
+    
+    }
     
     /* Convenience method on string(for:):. Convert a byte count into a string without creating an NSNumber.
     */
-    open func string(fromByteCount byteCount: Int64) -> String { NSUnimplemented() }
+    open func string(fromByteCount byteCount: Int64) -> String {
+        return string(fromByteCount: Float(byteCount))
+    }
+    
+    open override func string(for obj: Any) -> String? {
+        guard let number = obj as? NSNumber else { return nil }
+        return string(fromByteCount: number.floatValue)
+    }
     
     /* Specify the units that can be used in the output. If NSByteCountFormatterUseDefault, uses platform-appropriate settings; otherwise will only use the specified units. This is the default value. Note that ZB and YB cannot be covered by the range of possible values, but you can still choose to use these units to get fractional display ("0.0035 ZB" for instance).
     */

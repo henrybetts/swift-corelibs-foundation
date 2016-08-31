@@ -435,6 +435,12 @@ swift_sources = CompileSwiftSources([
 swift_sources.add_dependency(headers)
 foundation.add_phase(swift_sources)
 
+foundation_resources = CopyResources('Foundation', [
+	'Foundation/Resources/en.lproj/FileSizeFormatting.strings'
+])
+
+foundation.add_phase(foundation_resources)
+
 foundation_tests_resources = CopyResources('TestFoundation', [
     'TestFoundation/Resources/Info.plist',
     'TestFoundation/Resources/NSURLTestData.plist',
