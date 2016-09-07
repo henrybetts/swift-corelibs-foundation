@@ -7,6 +7,7 @@
 // See http://swift.org/CONTRIBUTORS.txt for the list of Swift project authors
 //
 
+import CoreFoundation
 
 extension MeasurementFormatter {
     public struct UnitOptions : OptionSet {
@@ -24,6 +25,32 @@ extension MeasurementFormatter {
 
 open class MeasurementFormatter : Formatter, NSSecureCoding {
     
+    private var __cfFormatter: CFMeasurementFormatter? = nil
+    private var _cfFormatter: CFMeasurementFormatter {
+        
+        if (__cfFormatter == nil){
+            
+            let cfStyle: CFMeasurementFormatterStyle
+            switch unitStyle {
+            case .long:
+                cfStyle = .wide
+            case .medium:
+                cfStyle = .short
+            case .short:
+                cfStyle = .narrow
+            }
+            
+            __cfFormatter = CFMeasurementFormatterCreate(kCFAllocatorDefault, locale._cfObject, cfStyle, numberFormatter._cfFormatter)
+            
+        }
+        
+        return __cfFormatter!
+        
+    }
+    
+    private func reset(){
+        __cfFormatter = nil
+    }
     
     /*
      This property can be set to ensure that the formatter behaves in a way the developer expects, even if it is not standard according to the preferences of the user's locale. If not specified, unitOptions defaults to localizing according to the preferences of the locale.
@@ -47,22 +74,119 @@ open class MeasurementFormatter : Formatter, NSSecureCoding {
     /*
      If not specified, unitStyle is set to NSFormattingUnitStyleMedium.
      */
-    open var unitStyle: Formatter.UnitStyle
+    open var unitStyle: Formatter.UnitStyle = .medium {
+        didSet{
+            reset()
+        }
+    }
     
     
     /*
      If not specified, locale is set to the user's current locale.
      */
-    /*@NSCopying*/ open var locale: Locale!
+    /*@NSCopying*/ open var locale: Locale! = Locale.current {
+        didSet{
+            reset()
+        }
+    }
     
     
     /*
      If not specified, the number formatter is set up with NSNumberFormatterDecimalStyle.
      */
-    open var numberFormatter: NumberFormatter!
+    private var _numberFormatter: NumberFormatter? = nil
+    open var numberFormatter: NumberFormatter! {
+        get{
+            if let obj = _numberFormatter{
+                return obj
+            }else{
+                let obj = NumberFormatter()
+                obj.numberStyle = .decimal
+                _numberFormatter = obj
+                reset()
+                return obj
+            }
+        }
+        set{
+            _numberFormatter = newValue
+            reset()
+        }
+    }
+    
+    private func cfUnit(from unit: Unit) -> CFMeasurementFormatterUnit?{
+        
+        if unit is UnitAcceleration {
+            
+            switch unit.symbol {
+            case UnitAcceleration.Symbol.gravity: return .acceleration_GForce
+            case UnitAcceleration.Symbol.metersPerSecondSquared: return .acceleration_MeterPerSecondSquared
+            default: return nil
+            }
+            
+        }else if unit is UnitAngle {
+            
+        }else if unit is UnitArea {
+            
+        }else if unit is UnitConcentrationMass {
+            
+        }else if unit is UnitDispersion {
+            
+        }else if unit is UnitDuration {
+            
+        }else if unit is UnitElectricCharge {
+            
+        }else if unit is UnitElectricCurrent {
+            
+        }else if unit is UnitElectricPotentialDifference {
+            
+        }else if unit is UnitElectricResistance {
+            
+        }else if unit is UnitEnergy {
+            
+        }else if unit is UnitFrequency {
+            
+        }else if unit is UnitFuelEfficiency {
+            
+        }else if unit is UnitIlluminance {
+            
+        }else if unit is UnitLength {
+            
+        }else if unit is UnitMass {
+            
+        }else if unit is UnitPower {
+            
+        }else if unit is UnitPressure {
+            
+        }else if unit is UnitSpeed {
+            
+        }else if unit is UnitTemperature {
+            
+        }else if unit is UnitVolume {
+            
+        }
+
+        return nil
+        
+    }
     
     
-    open func string(from measurement: Measurement<Unit>) -> String { NSUnimplemented() }
+    open func string<UnitType: Unit>(from measurement: Measurement<UnitType>) -> String {
+        
+        if let cfUnit = cfUnit(from: measurement.unit) {
+            
+            if let string = CFMeasurementFormatterCreateString(kCFAllocatorDefault, _cfFormatter, measurement.value, cfUnit) {
+                
+                return string._swiftObject
+                
+            }
+            
+        }
+        
+        //if localization fails, return formatted number + symbol
+        guard let numberString = numberFormatter.string(from: NSNumber(value: measurement.value)) else { return "" }
+        return numberString + measurement.unit.symbol
+        
+    }
     
     
     /*
@@ -71,13 +195,11 @@ open class MeasurementFormatter : Formatter, NSSecureCoding {
      */
     open func string(from unit: Unit) -> String { NSUnimplemented() }
     
-    public override init() { NSUnimplemented() }
+    public override init() {
+        super.init()
+    }
     
     public required init?(coder aDecoder: NSCoder) { NSUnimplemented() }
     open override func encode(with aCoder: NSCoder) { NSUnimplemented() }
     public static var supportsSecureCoding: Bool { return true }
-}
-
-extension MeasurementFormatter {
-    public func string<UnitType : Unit>(from measurement: Measurement<UnitType>) -> String { NSUnimplemented() }
 }

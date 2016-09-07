@@ -58,7 +58,7 @@ open class NumberFormatter : Formatter {
     
     typealias CFType = CFNumberFormatter
     private var _currentCfFormatter: CFType?
-    private var _cfFormatter: CFType {
+    internal var _cfFormatter: CFType {
         if let obj = _currentCfFormatter {
             return obj
         } else {

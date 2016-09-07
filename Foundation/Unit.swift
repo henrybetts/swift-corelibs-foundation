@@ -225,7 +225,7 @@ open class UnitAcceleration : Dimension {
      Base unit - metersPerSecondSquared
      */
     
-    private struct Symbol {
+    internal struct Symbol {
         static let metersPerSecondSquared   = "m/s²"
         static let gravity                  = "g"
     }
