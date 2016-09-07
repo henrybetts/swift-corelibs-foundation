@@ -196,6 +196,7 @@ sources = CompileSources([
     'closure/data.c',
     'closure/runtime.c',
     'uuid/uuid.c',
+    'unicode/uameasureformat.cpp',
 	# 'CoreFoundation/AppServices.subproj/CFUserNotification.c',
 	'CoreFoundation/Base.subproj/CFBase.c',
 	'CoreFoundation/Base.subproj/CFFileUtilities.c',
