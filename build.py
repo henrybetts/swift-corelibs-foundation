@@ -186,6 +186,7 @@ private = [
 	'CoreFoundation/StringEncodings.subproj/CFICUConverters.h',
 	'CoreFoundation/String.subproj/CFRegularExpression.h',
 	'CoreFoundation/String.subproj/CFRunArray.h',
+	'CoreFoundation/Locale.subproj/CFMeasurementFormatter.h',
 ],
 project = [
 ])
@@ -223,6 +224,7 @@ sources = CompileSources([
 	'CoreFoundation/Locale.subproj/CFLocaleIdentifier.c',
 	'CoreFoundation/Locale.subproj/CFLocaleKeys.c',
 	'CoreFoundation/Locale.subproj/CFNumberFormatter.c',
+	'CoreFoundation/Locale.subproj/CFMeasurementFormatter.c',
 	'CoreFoundation/NumberDate.subproj/CFBigNumber.c',
 	'CoreFoundation/NumberDate.subproj/CFDate.c',
 	'CoreFoundation/NumberDate.subproj/CFNumber.c',

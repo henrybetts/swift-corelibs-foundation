@@ -26,6 +26,7 @@
 #include <unicode/unum.h>
 #include <unicode/ucurr.h>
 #include <unicode/ustring.h>
+#include <unicode/uameasureformat.h>
 
 // ucal
 
@@ -101,5 +102,10 @@
 // unum
 #define __cficu_unum_setContext unum_setContext
 #define __cficu_unum_getContext unum_getContext
+//umeasfmt
+//update once ICU implement C interface for measures
+#define __cficu_umeasfmt_open uameasfmt_open
+#define __cficu_umeasfmt_close uameasfmt_close
+#define __cficu_umeasfmt_format uameasfmt_format
 
 #endif
