@@ -173,7 +173,7 @@ extension MeasurementFormatter {
 open class MeasurementFormatter : Formatter, NSSecureCoding {
     
     private var __cfFormatter: CFMeasurementFormatter? = nil
-    private var _cfFormatter: CFMeasurementFormatter {
+    private var _cfFormatter: CFMeasurementFormatter? {
         
         if (__cfFormatter == nil){
             
@@ -191,7 +191,7 @@ open class MeasurementFormatter : Formatter, NSSecureCoding {
             
         }
         
-        return __cfFormatter!
+        return __cfFormatter
         
     }
     
@@ -322,6 +322,7 @@ open class MeasurementFormatter : Formatter, NSSecureCoding {
     
     open func string<UnitType: Unit>(from measurement: Measurement<UnitType>) -> String {
         
+        if let formatter = _cfFormatter {
         if let cfUnit = cfUnit(from: measurement.unit) {
             
             if let string = CFMeasurementFormatterCreateString(kCFAllocatorDefault, _cfFormatter, measurement.value, cfUnit) {
@@ -331,7 +332,8 @@ open class MeasurementFormatter : Formatter, NSSecureCoding {
             }
             
         }
-        
+        }
+            
         //if localization fails, return formatted number + symbol
         guard let numberString = numberFormatter.string(from: NSNumber(value: measurement.value)) else { return "" }
         return numberString + measurement.unit.symbol
