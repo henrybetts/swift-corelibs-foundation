@@ -149,6 +149,13 @@ private let kCFMeasurementFormatterUnitVolume_Teaspoon = CFMeasurementFormatterU
 #endif
 // End generated code
 
+#if os(OSX) || os(iOS)
+private let kCFMeasurementFormatterStyleWide = CFMeasurementFormatterStyle.wide
+private let kCFMeasurementFormatterStyleShort = CFMeasurementFormatterStyle.short
+private let kCFMeasurementFormatterStyleNarrow = CFMeasurementFormatterStyle.narrow
+private let kCFMeasurementFormatterStyleNumeric = CFMeasurementFormatterStyle.numeric
+#endif
+
 extension MeasurementFormatter {
     public struct UnitOptions : OptionSet {
         public private(set) var rawValue: UInt
@@ -173,11 +180,11 @@ open class MeasurementFormatter : Formatter, NSSecureCoding {
             let cfStyle: CFMeasurementFormatterStyle
             switch unitStyle {
             case .long:
-                cfStyle = .wide
+                cfStyle = kCFMeasurementFormatterStyleWide
             case .medium:
-                cfStyle = .short
+                cfStyle = kCFMeasurementFormatterStyleShort
             case .short:
-                cfStyle = .narrow
+                cfStyle = kCFMeasurementFormatterStyleNarrow
             }
             
             __cfFormatter = CFMeasurementFormatterCreate(kCFAllocatorDefault, locale._cfObject, cfStyle, numberFormatter._cfFormatter)
