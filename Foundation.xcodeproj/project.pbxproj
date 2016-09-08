@@ -307,8 +307,8 @@
 		7900433C1CACD33E00ECCBF1 /* TestNSPredicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7900433A1CACD33E00ECCBF1 /* TestNSPredicate.swift */; };
 		AE35A1861CBAC85E0042DB84 /* SwiftFoundation.h in Headers */ = {isa = PBXBuildFile; fileRef = AE35A1851CBAC85E0042DB84 /* SwiftFoundation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BA27D50F1D7F40F50082992C /* TestNSMeasurementFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA27D50E1D7F40F50082992C /* TestNSMeasurementFormatter.swift */; };
+		BAE192FE1D8213D500398B66 /* CFMeasurementFormatter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAEB5B571D7ECDB600CF0BE6 /* CFMeasurementFormatter.cpp */; };
 		BAEB5B5B1D7ED3F000CF0BE6 /* CFMeasurementFormatter.h in Headers */ = {isa = PBXBuildFile; fileRef = BAEB5B581D7ECDB600CF0BE6 /* CFMeasurementFormatter.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		BAEB5B5C1D7F0BCF00CF0BE6 /* CFMeasurementFormatter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = BAEB5B571D7ECDB600CF0BE6 /* CFMeasurementFormatter.cpp */; settings = {COMPILER_FLAGS = "-lc++"; }; };
 		CC5249C01D341D23007CB54D /* TestUnitConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC5249BF1D341D23007CB54D /* TestUnitConverter.swift */; };
 		CE19A88C1C23AA2300B4CB6A /* NSStringTestData.txt in Resources */ = {isa = PBXBuildFile; fileRef = CE19A88B1C23AA2300B4CB6A /* NSStringTestData.txt */; };
 		D31302011C30CEA900295652 /* NSConcreteValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31302001C30CEA900295652 /* NSConcreteValue.swift */; };
@@ -2113,7 +2113,7 @@
 				5B7C8A8E1BEA7FE200C5B690 /* CFTimeZone.c in Sources */,
 				5B7C8A791BEA7FCE00C5B690 /* CFUUID.c in Sources */,
 				5B7C8A7F1BEA7FCE00C5B690 /* CFData.c in Sources */,
-				BAEB5B5C1D7F0BCF00CF0BE6 /* CFMeasurementFormatter.cpp in Sources */,
+				BAE192FE1D8213D500398B66 /* CFMeasurementFormatter.cpp in Sources */,
 				5B7C8A9C1BEA7FF900C5B690 /* CFBundle.c in Sources */,
 				5B7C8AB51BEA801700C5B690 /* CFUniChar.c in Sources */,
 				61E011811C1B5998000037DD /* CFMessagePort.c in Sources */,
@@ -2548,7 +2548,7 @@
 					"-DCF_CHARACTERSET_UNICHAR_DB=\\\\\"CoreFoundation/CharacterSets/CFUniCharPropertyDatabase.data\\\\\"",
 					"-DCF_CHARACTERSET_BITMAP=\\\\\"CoreFoundation/CharacterSets/CFCharacterSetBitmaps.bitmap\\\\\"",
 				);
-				OTHER_LDFLAGS = "-lc++";
+				OTHER_LDFLAGS = "";
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include/CoreFoundation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include/CoreFoundation;
@@ -2588,7 +2588,7 @@
 					"-DCF_CHARACTERSET_UNICHAR_DB=\\\\\"CoreFoundation/CharacterSets/CFUniCharPropertyDatabase.data\\\\\"",
 					"-DCF_CHARACTERSET_BITMAP=\\\\\"CoreFoundation/CharacterSets/CFCharacterSetBitmaps.bitmap\\\\\"",
 				);
-				OTHER_LDFLAGS = "-lc++";
+				OTHER_LDFLAGS = "";
 				PRIVATE_HEADERS_FOLDER_PATH = /usr/local/include/CoreFoundation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = /usr/local/include/CoreFoundation;

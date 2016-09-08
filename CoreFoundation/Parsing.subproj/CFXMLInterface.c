@@ -322,8 +322,8 @@ CFErrorRef _CFErrorCreateFromXMLInterface(_CFXMLInterfaceError err) {
     return CFErrorCreate(kCFAllocatorSystemDefault, CFSTR("NSXMLParserErrorDomain"), err->code, nil);
 }
 
-_CFXMLNodePtr _CFXMLNewNode(_CFXMLNamespacePtr namespace, const char* name) {
-    return xmlNewNode(namespace, (const xmlChar*)name);
+_CFXMLNodePtr _CFXMLNewNode(_CFXMLNamespacePtr aNamespace, const char* name) {
+    return xmlNewNode(aNamespace, (const xmlChar*)name);
 }
 
 _CFXMLNodePtr _CFXMLCopyNode(_CFXMLNodePtr node, bool recursive) {

@@ -698,6 +698,13 @@ CFTypeRef CFMakeCollectable(CFTypeRef cf) CF_AUTOMATED_REFCOUNT_UNAVAILABLE;
 
 #endif
 
+//makes it easier for cpp files to include CF headers
+#ifndef restrict
+#if defined(__cplusplus)
+#define restrict
+#endif
+#endif
+
 CF_EXTERN_C_END
 
 #endif /* ! __COREFOUNDATION_CFBASE__ */

@@ -136,7 +136,7 @@ typedef void* _CFXMLEntityPtr;
 typedef void* _CFXMLDTDPtr;
 typedef void* _CFXMLDTDNodePtr;
 
-_CFXMLNodePtr _CFXMLNewNode(_CFXMLNamespacePtr _Nullable namespacea, const char* name);
+_CFXMLNodePtr _CFXMLNewNode(_CFXMLNamespacePtr _Nullable aNamespace, const char* name);
 _CFXMLNodePtr _CFXMLCopyNode(_CFXMLNodePtr node, bool recursive);
 
 _CFXMLDocPtr _CFXMLNewDoc(const unsigned char* version);
