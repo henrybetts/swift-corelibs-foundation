@@ -137,7 +137,7 @@ CFMeasurementFormatterRef CFMeasurementFormatterCreate(CFAllocatorRef allocator,
     return (CFMeasurementFormatterRef)memory;
     
 #else
-    return NULL
+    return NULL;
 #endif
     
 }
