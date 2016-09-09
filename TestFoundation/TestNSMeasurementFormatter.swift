@@ -45,12 +45,12 @@ class TestMeasurementFormatter: XCTestCase {
 
         struct UnitData{
             let unit: Unit
-            let version: Int
+            let version: Int32
             let symbol: String
             let short: String
             let medium: String
             let long: String
-            init(_ unit:Unit,_ version:Int,_ symbol:String,_ short:String,_ medium:String,_ long:String) {
+            init(_ unit:Unit, _ version:Int32, _ symbol:String, _ short:String, _ medium:String, _ long:String) {
                 self.unit = unit
                 self.version = version
                 self.symbol = symbol
