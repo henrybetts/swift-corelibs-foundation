@@ -28,6 +28,7 @@
 #include <CoreFoundation/ForFoundationOnly.h>
 #include <fts.h>
 #include <pthread.h>
+#include "unicode/uvernum.h"
 
 _CF_EXPORT_SCOPE_BEGIN
 

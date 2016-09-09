@@ -175,6 +175,8 @@ open class MeasurementFormatter : Formatter, NSSecureCoding {
     private var __cfFormatter: CFMeasurementFormatter? = nil
     private var _cfFormatter: CFMeasurementFormatter? {
         
+        guard kCFMeasurementFormatterIsAvailable else { return nil }
+        
         if (__cfFormatter == nil){
             
             let cfStyle: CFMeasurementFormatterStyle
@@ -322,16 +324,14 @@ open class MeasurementFormatter : Formatter, NSSecureCoding {
     
     open func string<UnitType: Unit>(from measurement: Measurement<UnitType>) -> String {
         
-        if let formatter = _cfFormatter {
-        if let cfUnit = cfUnit(from: measurement.unit) {
+        if let formatter = _cfFormatter, let cfUnit = cfUnit(from: measurement.unit) {
             
-            if let string = CFMeasurementFormatterCreateString(kCFAllocatorDefault, _cfFormatter, measurement.value, cfUnit) {
+            if let string = CFMeasurementFormatterCreateString(kCFAllocatorDefault, formatter, measurement.value, cfUnit) {
                 
                 return string._swiftObject
                 
             }
             
-        }
         }
             
         //if localization fails, return formatted number + symbol

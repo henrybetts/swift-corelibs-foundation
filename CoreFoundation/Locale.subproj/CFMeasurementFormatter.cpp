@@ -17,8 +17,17 @@ extern "C"{
 #include <unicode/measfmt.h>
 #include <unicode/measunit.h>
 #include <unicode/measure.h>
+#include <unicode/uvernum.h>
 
 #define BUFFER_SIZE 768
+
+#if U_ICU_VERSION_MAJOR_NUM >= 53
+const bool kCFMeasurementFormatterIsAvailable = true;
+#else
+const bool kCFMeasurementFormatterIsAvailable = false;
+#endif
+
+const CFIndex kCFMeasurementFormatterICUVersion = U_ICU_VERSION_MAJOR_NUM;
 
 struct __CFMeasurementFormatter {
     CFRuntimeBase _base;

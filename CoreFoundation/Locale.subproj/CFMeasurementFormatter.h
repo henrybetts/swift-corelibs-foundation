@@ -14,9 +14,12 @@
 #include <CoreFoundation/CFLocale.h>
 #include <CoreFoundation/CFNumberFormatter.h>
 #include <CoreFoundation/CFArray.h>
+#include <unicode/uvernum.h>
 
 CF_IMPLICIT_BRIDGING_ENABLED
 CF_EXTERN_C_BEGIN
+
+CF_EXPORT const bool kCFMeasurementFormatterIsAvailable;
 
 typedef struct CF_BRIDGED_MUTABLE_TYPE(id) __CFMeasurementFormatter *CFMeasurementFormatterRef;
 

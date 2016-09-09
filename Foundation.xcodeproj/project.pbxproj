@@ -2386,6 +2386,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(CONFIGURATION_BUILD_DIR)/usr/local/include",
 					/usr/include/libxml2,
+					"$(SRCROOT)/bootstrap/x86_64-apple-darwin/usr/local/include",
 				);
 				INFOPLIST_FILE = Foundation/Info.plist;
 				INIT_ROUTINE = "___CFInitialize";
@@ -2459,6 +2460,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(CONFIGURATION_BUILD_DIR)/usr/local/include",
 					/usr/include/libxml2,
+					"$(SRCROOT)/bootstrap/x86_64-apple-darwin/usr/local/include",
 				);
 				INFOPLIST_FILE = Foundation/Info.plist;
 				INIT_ROUTINE = "___CFInitialize";

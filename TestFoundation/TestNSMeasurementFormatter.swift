@@ -10,9 +10,11 @@
 #if DEPLOYMENT_RUNTIME_OBJC || os(Linux)
     import Foundation
     import XCTest
+    import CoreFoundation
 #else
     import SwiftFoundation
     import SwiftXCTest
+    import CoreFoundation
 #endif
 
 
@@ -40,12 +42,64 @@ class TestMeasurementFormatter: XCTestCase {
     }
  
     func test_format(){
+
+        struct UnitData{
+            let unit: Unit
+            let version: Int
+            let symbol: String
+            let short: String
+            let medium: String
+            let long: String
+            init(_ unit:Unit,_ version:Int,_ symbol:String,_ short:String,_ medium:String,_ long:String) {
+                self.unit = unit
+                self.version = version
+                self.symbol = symbol
+                self.short = short
+                self.medium = medium
+                self.long = long
+            }
+        }
         
-        let mf = MeasurementFormatter()
-        mf.locale = Locale(identifier: "en_US")
+        let data = [
+            
+            //          Unit, ICU version, symbol, ICU narrow, ICU short, ICU wide
+            
+            UnitData(UnitAcceleration.gravity, 53, "12g", "12Gs", "12 G", "12 g-force"),
+            UnitData(UnitAcceleration.metersPerSecondSquared, 54, "12m/s²", "12m/s²", "12 m/s²", "12 meters per second squared")
+        ]
         
-        XCTAssertEqual(mf.string(from: Measurement(value: 12.0, unit: UnitAcceleration.gravity)), "12 G")
-        XCTAssertEqual(mf.string(from: Measurement(value: 12.0, unit: UnitAcceleration.metersPerSecondSquared)), "12 m/s²")
+        
+        let locale = Locale(identifier: "en_US")
+        
+        let short = MeasurementFormatter()
+        short.unitStyle = .short
+        short.locale = locale
+        
+        let medium = MeasurementFormatter()
+        medium.unitStyle = .medium
+        medium.locale = locale
+        
+        let long = MeasurementFormatter()
+        long.unitStyle = .long
+        long.locale = locale
+        
+        for unitData in data {
+            
+            let measurement = Measurement(value: 12, unit: unitData.unit)
+            
+            if (kCFMeasurementFormatterIsAvailable && unitData.version <= U_ICU_VERSION_MAJOR_NUM){
+                
+                XCTAssertEqual(short.string(from: measurement), unitData.short, "Testing short style")
+                XCTAssertEqual(medium.string(from: measurement), unitData.medium, "Testing medium style")
+                XCTAssertEqual(long.string(from: measurement), unitData.long, "Testing long style")
+                
+            }else{
+                
+                XCTAssertEqual(short.string(from: measurement), unitData.symbol, "Testing built-in symbol (ICU unavailable)")
+                
+            }
+            
+        }
         
     }
     
